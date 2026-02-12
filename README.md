@@ -315,10 +315,10 @@ A notable approach by **Fedus et al. (2019)** attempted to introduce hyperbolic 
 
 We argue that to solve general discounting problems correctly, the agent must be explicitly aware of time, and the weights must evolve. In our **multi-horizon framework**, we show that as time t progresses, the effective contribution of each exponential discount factor changes. The weights should not be static constants, but rather time-dependent weights that vary with time.
 
-<video controls autoplay loop muted playsinline width="100%">
-  <source src="files/EvolvingWeightsExact.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+https://github.com/user-attachments/assets/b917726a-68c2-4345-bf3c-59c75160eda8
+
+*(If the video above doesn't display, you can view it directly: [EvolvingWeightsExact.mp4](files/EvolvingWeightsExact.mp4))*
+
 
 *Evolution of time-dependent weights in our multi-horizon framework. As time progresses, the contribution of each discount factor changes, ensuring time-consistency.*
 
