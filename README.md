@@ -1,77 +1,5 @@
 # Decoupling Time and Risk: Risk-Sensitive RL with General Discounting
 
-## � Research Results & Key Findings
-
-**For a detailed discussion of our research, see our [blog post](https://mehrdadmoghimi.github.io/posts/2026/02/rigor/).**
-
-In standard Reinforcement Learning (RL), the discount factor (γ) is often treated as a fixed parameter of the Markov Decision Process or a tunable hyperparameter for training stability. We typically default to **exponential discounting**, where the value of a reward decays by a constant factor at every time step.
-
-While mathematically convenient, this standard formulation is restrictive. It limits our ability to model complex **time preferences** (how an agent values the future vs. the present) and **risk preferences** (how an agent handles uncertainty) independently.
-
-In our recent [paper](https://arxiv.org/abs/2602.04131), **"Decoupling Time and Risk: Risk-Sensitive RL with General Discounting,"** we propose a unified framework that supports general discount functions and risk measures. By properly handling **time consistency** and tracking accumulated rewards, we show that we can capture more expressive behaviors, like preference reversals, and significantly improve performance in complex environments.
-
-### The Problem with "Stationary" Hyperbolic Discounting
-
-A major motivation for this work was to revisit **hyperbolic discounting**. Unlike exponential discounting, hyperbolic discounting models agents that are impatient in the short term but patient in the long term—a behavior observed in humans and animals.
-
-A notable approach by **Fedus et al. (2019)** attempted to introduce hyperbolic discounting into Deep RL. They approximated the hyperbolic discount function as a weighted average of multiple exponential discount factors, but used **fixed weights** throughout the episode. By enforcing a stationary policy, they implicitly reset the agent's "time zero" at every step, leading to **time inconsistency**: the policy the agent plans at t=0 is not the policy it wants to execute at t=1.
-
-### Our Solution: Time-Dependent Weights
-
-We argue that to solve general discounting problems correctly, the agent must be explicitly aware of time, and the weights must evolve. In our **multi-horizon framework**, we show that as time t progresses, the effective contribution of each exponential discount factor changes. The weights should not be static constants, but rather time-dependent weights that vary with time.
-
-<video controls autoplay loop muted playsinline width="100%">
-  <source src="files/EvolvingWeightsExact.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-
-*Evolution of time-dependent weights in our multi-horizon framework. As time progresses, the contribution of each discount factor changes, ensuring time-consistency.*
-
-### A Unified Framework for Time and Risk
-
-Our contributions go beyond just fixing hyperbolic discounting. We introduce a broad framework called **RIGOR** (**RI**sk-sensitive RL under **G**eneral discounting **O**f **R**eturns) that decouples time and risk:
-
-1. **Stock-Augmented Distributional RL:** We build on the idea of augmenting the state with a "stock" that tracks accumulated rewards, with an "Anytime Proxy" equation that guarantees the agent optimizes the global objective from any time step.
-
-2. **General Discount Functions:** Our method supports any non-increasing discount function (hyperbolic, quasi-hyperbolic, etc.), not just exponential.
-
-3. **OCE Risk Measures:** By operating on the full return distribution, we can optimize for **Optimized Certainty Equivalent (OCE)** risk measures, such as **Conditional Value at Risk (CVaR)** or **Entropic Risk**.
-
-![OCE Risk Measures Utilities](files/utilities.png)
-
-*Utility functions for common OCE risk measures. Our framework allows us to plug in different utility functions to shape the agent's risk profile, independent of the discount function.*
-
-### Preference Reversals in Wealth Management
-
-To demonstrate that our agent captures human-like time preferences, we tested it on a "Goal-Based Wealth Management" problem. We compared a standard Exponential agent against our Hyperbolic agent.
-
-The results showed a clear **preference reversal**. When the "late goal" was more valuable, the Hyperbolic agent showed impatience for immediate rewards but patience for distant ones, shifting its probability of success in a way the Exponential agent could not capture.
-
-![Goal-Based Wealth Management](files/gbwm-risk-E.png)
-
-*Monte-Carlo probabilities of achieving goals. The shift in the red markers (Hyperbolic) compared to the blue (Exponential) illustrates the agent's non-linear time preference, capturing behaviors that standard RL misses.*
-
-### Improving Performance in Atari
-
-Finally, we evaluated whether fixing the theoretical inconsistency in Fedus et al. actually matters for performance. We compared our **Time-Consistent** agent against the **Time-Inconsistent** baseline across 50 Atari games.
-
-The results were significant. By correctly modeling the non-stationary optimal policy and evolving the weights over time, our method achieved higher returns in **39 out of 50 games**, with a mean improvement of roughly **40%**.
-
-![Atari Performance Improvement](files/improvement.png)
-
-*Relative performance improvement of our Time-Consistent algorithm across 50 Atari games. The consistent positive trend demonstrates the benefits of maintaining time-consistency under hyperbolic discounting.*
-
-### Key Takeaways
-
-Discounting is a fundamental part of the problem definition. It encodes **time preference**, which is distinct from the **risk preference** encoded in the objective function.
-
-By decoupling these two dimensions and ensuring our optimization remains time-consistent, we can build RL agents that are not only more expressive and robust but also perform better on complex control tasks.
-
-**Read the full paper:** [arXiv:2602.04131](https://arxiv.org/abs/2602.04131)
-
-**Detailed blog post:** [https://mehrdadmoghimi.github.io/posts/2026/02/rigor/](https://mehrdadmoghimi.github.io/posts/2026/02/rigor/)
-
-
 ##  Quick Start
 
 Create and activate a conda environment:
@@ -367,6 +295,76 @@ python qrdqn_mean_cvar.py --env-id AmericanOptionEnv-v1 \
 --evaluation-episodes INT    # Number of evaluation episodes (default: 1000)
 ```
 
+## � Research Results & Key Findings
+
+**For a detailed discussion of our research, see our [blog post](https://mehrdadmoghimi.github.io/posts/2026/02/rigor/).**
+
+In standard Reinforcement Learning (RL), the discount factor (γ) is often treated as a fixed parameter of the Markov Decision Process or a tunable hyperparameter for training stability. We typically default to **exponential discounting**, where the value of a reward decays by a constant factor at every time step.
+
+While mathematically convenient, this standard formulation is restrictive. It limits our ability to model complex **time preferences** (how an agent values the future vs. the present) and **risk preferences** (how an agent handles uncertainty) independently.
+
+In our recent [paper](https://arxiv.org/abs/2602.04131), **"Decoupling Time and Risk: Risk-Sensitive RL with General Discounting,"** we propose a unified framework that supports general discount functions and risk measures. By properly handling **time consistency** and tracking accumulated rewards, we show that we can capture more expressive behaviors, like preference reversals, and significantly improve performance in complex environments.
+
+### The Problem with "Stationary" Hyperbolic Discounting
+
+A major motivation for this work was to revisit **hyperbolic discounting**. Unlike exponential discounting, hyperbolic discounting models agents that are impatient in the short term but patient in the long term—a behavior observed in humans and animals.
+
+A notable approach by **Fedus et al. (2019)** attempted to introduce hyperbolic discounting into Deep RL. They approximated the hyperbolic discount function as a weighted average of multiple exponential discount factors, but used **fixed weights** throughout the episode. By enforcing a stationary policy, they implicitly reset the agent's "time zero" at every step, leading to **time inconsistency**: the policy the agent plans at t=0 is not the policy it wants to execute at t=1.
+
+### Our Solution: Time-Dependent Weights
+
+We argue that to solve general discounting problems correctly, the agent must be explicitly aware of time, and the weights must evolve. In our **multi-horizon framework**, we show that as time t progresses, the effective contribution of each exponential discount factor changes. The weights should not be static constants, but rather time-dependent weights that vary with time.
+
+<video controls autoplay loop muted playsinline width="100%">
+  <source src="files/EvolvingWeightsExact.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+*Evolution of time-dependent weights in our multi-horizon framework. As time progresses, the contribution of each discount factor changes, ensuring time-consistency.*
+
+### A Unified Framework for Time and Risk
+
+Our contributions go beyond just fixing hyperbolic discounting. We introduce a broad framework called **RIGOR** (**RI**sk-sensitive RL under **G**eneral discounting **O**f **R**eturns) that decouples time and risk:
+
+1. **Stock-Augmented Distributional RL:** We build on the idea of augmenting the state with a "stock" that tracks accumulated rewards, with an "Anytime Proxy" equation that guarantees the agent optimizes the global objective from any time step.
+
+2. **General Discount Functions:** Our method supports any non-increasing discount function (hyperbolic, quasi-hyperbolic, etc.), not just exponential.
+
+3. **OCE Risk Measures:** By operating on the full return distribution, we can optimize for **Optimized Certainty Equivalent (OCE)** risk measures, such as **Conditional Value at Risk (CVaR)** or **Entropic Risk**.
+
+![OCE Risk Measures Utilities](files/utilities.png)
+
+*Utility functions for common OCE risk measures. Our framework allows us to plug in different utility functions to shape the agent's risk profile, independent of the discount function.*
+
+### Preference Reversals in Wealth Management
+
+To demonstrate that our agent captures human-like time preferences, we tested it on a "Goal-Based Wealth Management" problem. We compared a standard Exponential agent against our Hyperbolic agent.
+
+The results showed a clear **preference reversal**. When the "late goal" was more valuable, the Hyperbolic agent showed impatience for immediate rewards but patience for distant ones, shifting its probability of success in a way the Exponential agent could not capture.
+
+![Goal-Based Wealth Management](files/gbwm-risk-E.png)
+
+*Monte-Carlo probabilities of achieving goals. The shift in the red markers (Hyperbolic) compared to the blue (Exponential) illustrates the agent's non-linear time preference, capturing behaviors that standard RL misses.*
+
+### Improving Performance in Atari
+
+Finally, we evaluated whether fixing the theoretical inconsistency in Fedus et al. actually matters for performance. We compared our **Time-Consistent** agent against the **Time-Inconsistent** baseline across 50 Atari games.
+
+The results were significant. By correctly modeling the non-stationary optimal policy and evolving the weights over time, our method achieved higher returns in **39 out of 50 games**, with a mean improvement of roughly **40%**.
+
+![Atari Performance Improvement](files/improvement.png)
+
+*Relative performance improvement of our Time-Consistent algorithm across 50 Atari games. The consistent positive trend demonstrates the benefits of maintaining time-consistency under hyperbolic discounting.*
+
+### Key Takeaways
+
+Discounting is a fundamental part of the problem definition. It encodes **time preference**, which is distinct from the **risk preference** encoded in the objective function.
+
+By decoupling these two dimensions and ensuring our optimization remains time-consistent, we can build RL agents that are not only more expressive and robust but also perform better on complex control tasks.
+
+**Read the full paper:** [arXiv:2602.04131](https://arxiv.org/abs/2602.04131)
+
+**Detailed blog post:** [https://mehrdadmoghimi.github.io/posts/2026/02/rigor/](https://mehrdadmoghimi.github.io/posts/2026/02/rigor/)
 
 
 ## � References
@@ -374,9 +372,9 @@ python qrdqn_mean_cvar.py --env-id AmericanOptionEnv-v1 \
 If you use this code in your research, please cite:
 
 ```bibtex
-@article{moghimi2026rigor,
-  title={Decoupling Time and Risk: Risk-Sensitive RL with General Discounting},
-  author={Moghimi, Mehrdad and others},
+@article{moghimi2026decoupling,
+  title={Decoupling Time and Risk: Risk-Sensitive Reinforcement Learning with General Discounting},
+  author={Moghimi, Mehrdad and Coache, Anthony and Ku, Hyejin},
   journal={arXiv preprint arXiv:2602.04131},
   year={2026}
 }
