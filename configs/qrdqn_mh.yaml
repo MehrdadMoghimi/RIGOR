@@ -1,0 +1,25 @@
+# Environment-specific hyperparameter defaults for qrdqn.py
+# CLI arguments override these values. Format: env_id -> {param: value}
+
+defaults: &defaults
+  # Common defaults (used if env not specified)
+  learning_rate: 1e-3
+  n_quantiles: 50
+  batch_size: 128
+  gamma: 0.99
+  tau: 0.01
+  target_network_frequency: 500
+  buffer_size: 100000
+  huber_k: 0.1
+  time_aware: false
+
+AmericanOptionEnv-v1:
+  <<: *defaults
+  learning_rate: 3e-4
+  n_quantiles: 200
+  batch_size: 256
+  tau: 0.005
+  huber_k: 0.1
+  time_aware: true
+  total_timesteps: 1000000
+

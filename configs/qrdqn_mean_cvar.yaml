@@ -1,0 +1,74 @@
+# Environment-specific hyperparameter defaults for qrdqn_mean_cvar.py
+# CLI arguments override these values. Format: env_id -> {param: value}
+
+defaults: &defaults
+  # Common defaults (used if env not specified)
+  learning_rate: 1e-3
+  n_quantiles: 100
+  batch_size: 128
+  gamma: 0.99
+  tau: 0.01
+  target_network_frequency: 500
+  buffer_size: 100000
+  huber_k: 0.1
+  time_aware: false
+  discount_factor: exponential
+  risk_level: 1.0
+  mean_weight: 0.5
+  reward_normalizer: 1.0
+  initial_stock: 0.0
+  stock_editing: false
+  stock_editing_fanout: 49
+  target_averaging: false
+
+AmericanOptionEnv-v1:
+  <<: *defaults
+  learning_rate: 3e-4
+  n_quantiles: 200
+  batch_size: 256
+  tau: 0.005
+  huber_k: 0.1
+  time_aware: true
+  total_timesteps: 1000000
+  risk_level: 1.0
+  mean_weight: 1.0
+  reward_normalizer: 10.0
+  initial_stock: 0.0
+  stock_editing: True
+  stock_editing_fanout: 49
+  target_averaging: True
+
+GBWMEnv-base: &GBWMEnv
+  <<: *defaults
+  batch_size: 256
+  learning_rate: 1e-3
+  tau: 0.01
+  huber_k: 0.0
+  n_quantiles: 200
+  risk_level: 0.1
+  mean_weight: 0.0
+  time_aware: true
+  total_timesteps: 1000000
+  end_e : 0.02
+  exploration_fraction : 0.5
+  reward_normalizer: 1000.0
+  initial_stock: 0.0
+  stock_editing: True
+  stock_editing_fanout: 199
+  stock_min: -4000.0
+  stock_max: 0.0
+  stock_grid_size: 201
+  target_averaging: False
+  evaluation_episodes : 1000
+
+GBWMEnv-v0:
+  <<: *GBWMEnv
+
+GBWMEnv-v1:
+  <<: *GBWMEnv
+
+GBWMEnv-v2:
+  <<: *GBWMEnv
+
+GBWMEnv-v3:
+  <<: *GBWMEnv
