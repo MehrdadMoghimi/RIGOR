@@ -295,7 +295,7 @@ python qrdqn_mean_cvar.py --env-id AmericanOptionEnv-v1 \
 --evaluation-episodes INT    # Number of evaluation episodes (default: 1000)
 ```
 
-## � Research Results & Key Findings
+## 📈 Research Results & Key Findings
 
 **For a detailed discussion of our research, see our [blog post](https://mehrdadmoghimi.github.io/posts/2026/02/rigor/).**
 
@@ -367,7 +367,7 @@ By decoupling these two dimensions and ensuring our optimization remains time-co
 **Detailed blog post:** [https://mehrdadmoghimi.github.io/posts/2026/02/rigor/](https://mehrdadmoghimi.github.io/posts/2026/02/rigor/)
 
 
-## � References
+## 📚 References
 
 If you use this code in your research, please cite:
 
